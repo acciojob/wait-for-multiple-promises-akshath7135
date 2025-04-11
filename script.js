@@ -1,10 +1,9 @@
-//your JS code here. If required.
 document.addEventListener("DOMContentLoaded", () => {
   const output = document.getElementById("output");
 
-  // Initially, add a loading row
+  // Initially, add a loading row with ID "loading" for Cypress test compatibility
   output.innerHTML = `
-    <tr>
+    <tr id="loading">
       <td colspan="2" class="text-center">Loading...</td>
     </tr>
   `;
@@ -22,11 +21,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Wait for all promises to resolve
   Promise.all(promises).then((results) => {
+    // Remove loading row
+    const loadingRow = document.getElementById("loading");
+    if (loadingRow) loadingRow.remove(); // Ensure Cypress test passes
+
     // Get the max time for total duration
     const totalTime = Math.max(...results.map((p) => parseFloat(p.time))).toFixed(3);
-
-    // Remove loading row
-    output.innerHTML = "";
 
     // Populate table with resolved times
     results.forEach(({ index, time }) => {
